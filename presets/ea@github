@@ -1,0 +1,6 @@
+# Example preset file for a github user
+
+api=github
+apiurl=https://api.github.com
+repourl=https://github.com
+username=exampleuser

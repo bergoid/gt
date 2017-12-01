@@ -1,0 +1,31 @@
+#!/bin/bash
+
+# Bitbucket-specific code
+
+require curl
+
+####################################
+#
+# Create a remote repository
+#
+# createRemoteRepo URL USERNAME REPONAME
+#
+function createRemoteRepo
+{
+    echo TODO bb
+}
+
+####################################
+#
+# Prints full URL to remote repository on stdout
+#
+# REPONAME
+#
+function remoteRepoUrl
+{
+    if [ -z "$1" ]; then
+        exitWith 1 "Error: remoteRepoUrl : missing operand"
+    fi
+
+    echo "$url/$username/$1.git"
+}

@@ -1,0 +1,3 @@
+api=local
+url=$HOME/remote
+username=exampleuser

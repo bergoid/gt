@@ -1,0 +1,108 @@
+#!/bin/bash
+
+#. rabot-common
+#if [ "$?" -ne "0" ]; then
+#  echo "$0: Error while sourcing rabot-common" >&2
+#  exit 1
+#fi
+
+. gt-utils
+if [ "$?" -ne "0" ]; then
+  echo "$0: Error while sourcing gt-utils" >&2
+  exit 1
+fi
+
+checkForHelp $1
+minNumArgs 1 $#
+
+: << DOCSTRING
+Usage: $(basename "$0") PRESET [REMOTEREPONAME]
+
+This command initializes the current working directory (CWD)
+for version control with git and creates a remote repository.
+
+'$(basename "$0")' performs the following actions:
+
+1   If the CWD is already under version control with git,
+    this script will abort.
+
+2.  If the CWD is empty, an empty file called 'placeholder' is
+    created.
+
+3.  If the optional argument REMOTEREPONAME is specified, this is
+    used as the remote repository name. Otherwise the name of the
+    CWD is used.
+
+4.  '$(basename "$0")' creates a repository on the remote
+    location. If this action fails for some reason, the
+    script aborts.
+    The full location of the repository is determined based
+    on PRESET and REMOTEREPONAME.
+    For instructions on how to create and use presets, see the
+    comments preceding the function called 'loadPreset' in the
+    file 'gt-utils'.
+
+5.  A .git directory is initialized in your CWD, and the 'origin'
+    property in .git/config is set to the repo created on the
+    remote location.
+
+6.  The script 'gtcommit' is called to clean up the CWD, add
+    the entire git working tree to the staging area and commit
+    it with the message 'First commit'.
+
+7.  The first commit is pushed to the origin repository.
+
+See also: gtclone, gtcommit
+DOCSTRING
+
+
+# 1.
+if isInGit; then
+    exitWith 1 "Error: the current working directory ( '$PWD' ) is already under git version control."
+fi
+
+
+# 2.
+if [ "$(find -type f | wc -l)" == "0" ]; then
+
+    phName=placeholder
+
+    if [ -e "$phName" ]; then
+        phName="${phName}_$(randid 5)"
+    fi
+
+    touch "$phName"
+    exitOnError 1 "'touch $phName' failed"
+
+fi
+
+
+# 3.
+remoteRepoName=${2:-$(basename $(pwd))}
+
+
+# 4.
+loadPreset $1
+createRemoteRepo $remoteRepoName
+exitOnError 1 "'createRemoteRepo $remoteRepoName' returned an error."
+
+
+# 5.
+git init
+exitOnError 1 "'git init' returned an error."
+git remote add origin "$(remoteRepoUrl "$remoteRepoName")"
+exitOnError 1 "'git remote add $(remoteRepoUrl "$remoteRepoName")' returned an error."
+
+
+# 6.
+if [ -x "./precommit" ]; then
+    . ./precommit
+    exitOnError 1 "The script './precommit' returned an error."
+fi
+gtcommit -A "First commit"
+exitOnError 1 "'gtcommit' failed."
+
+
+# 7.
+git push --set-upstream origin master
+exitOnError 1 "'git push --set-upstream origin master' failed."

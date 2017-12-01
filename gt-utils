@@ -1,0 +1,229 @@
+#!/bin/bash
+
+[ -n "$GTN_UTILS" ] && return || readonly GTN_UTILS=1
+
+. rabot-common
+if [ "$?" -ne "0" ]; then
+  echo "$0: Error while sourcing rabot-common" >&2
+  exit 1
+fi
+
+require git
+
+##########################################################
+#                                                        #
+#    Some utility functions used by the 'gt' scripts    #
+#                                                        #
+##########################################################
+
+
+################################################################################
+#
+# Internally used helper function: optional "-C" argument
+# for git commands.
+#
+function getPathArgString
+{
+    if [ -n "$1" ]; then
+        echo "-C $1"
+    fi
+}
+
+
+################################################################################
+#
+# Internally used helper function:
+# Either CWD in absence of an argument, or the full path to the
+# directory given in the argument.
+#
+function getPath
+{
+    if [ -z "$1" ]; then
+        pwd
+    else
+        readlink -f "$1"
+    fi
+}
+
+
+################################################################################
+#
+# Echo toplevel path of git working tree
+#
+# getToplevel [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function getToplevel
+{
+    if isInGit "$(getPath "$1")"; then
+        git $(getPathArgString "$1") rev-parse --show-toplevel
+    fi
+}
+
+
+################################################################################
+#
+# Test if a directory is under 'git' version control.
+#
+# Print result to stdout.
+#
+# isInGit [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function isInGit
+{
+    if (git $(getPathArgString "$1") rev-parse --is-inside-work-tree 1>/dev/null 2>&1); then
+        true
+    else
+        false
+    fi
+}
+
+
+################################################################################
+#
+# Test if a directory has uncommited changes.
+# Print result to stdout.
+#
+# hasUncommittedChanges [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function hasUncommittedChanges
+{
+    if ! isInGit "$1"; then
+        false
+    else
+        git $(getPathArgString "$1") diff-index --quiet HEAD --
+        exitStatus="$?"
+        [ "$exitStatus" -ne "0" ]
+    fi
+}
+
+
+################################################################################
+#
+# Print the current branch to stdout
+#
+# getCurrentBranch [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function getCurrentBranch
+{
+    if isInGit "$1"; then
+        git $(getPathArgString "$1") symbolic-ref --short HEAD
+    else
+        thePath=$(getPath "$1")
+        errcho "getCurrentBranch: The directory '$thePath' is not in 'git' version control"
+    fi
+}
+
+
+################################################################################
+#
+# Check if a directory has unpushed commits
+#
+# hasUnpushedCommits [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function hasUnpushedCommits
+{
+    if ! isInGit "$1"; then
+        false
+    else
+        if ! hasUpstream "$1"; then
+            false
+        else
+            currentBranch=$(getCurrentBranch "$1")
+
+            [ -n "$(git $(getPathArgString "$1") diff $currentBranch origin/$currentBranch)" ]
+        fi
+    fi
+}
+
+
+################################################################################
+#
+# Check if the current branch has an upstream remote branch
+#
+# hasUpstream [DIR]
+#
+# DIR : an existing directory. Current working directory if omitted.
+#
+function hasUpstream
+{
+    if ! isInGit "$1"; then
+        false
+    else
+        git $(getPathArgString "$1") show-branch remotes/origin/$(getCurrentBranch "$1") 1>/dev/null 2>&1
+        exitStatus="$?"
+        [ "$exitStatus" -eq "0" ]
+    fi
+}
+
+
+################################################################################
+#
+# Load the configuration of a named preset given as an argument.
+#
+# loadPreset PRESET
+#
+# PRESET : the name of the preset.
+#
+# A preset is a set of configuration options that identifies a valid user
+# account on a particular git server.
+#
+# Examples of different presets are:
+#
+#     1. user 'fred' on github.com
+#     2. user 'lisa' on bitbucket.org
+#     3. user 'sarah' on gitlab.com
+#     4. user 'sarah' on a private instance of gitlab
+#     5. user 'tom' on a private git server accessible through 'ssh'.
+#
+# Passwords are not stored in the preset.
+#
+# Adjacent to the script file that calls 'loadPreset', there is a
+# directory called 'apis'. In the user's home directory there must
+# be a directory called '.gtpresets'.
+#
+# The argument PRESET must be the name of an existing script file in the
+# directory '~/.gtpresets'. This file will contain values for a number
+# of variables.
+# You can create a new preset by creating a new script file
+# in '~/.gtpresets' and assigning values to the required variables inside
+# the script. Adjacent to 'apis' there is a directory called 'presets'
+# with example files that can guide you with creating your own preset files.
+#
+# 'api' can have one of the following values: 'github', 'gitlab',
+# 'bitbucket', 'ssh' and 'https'. In the 'apis' directory there is a
+# file for each possible value of 'api'. These files contain bash
+# functions with api-specific implementations of some operations using
+# the values of the variables defined in the preset script file.
+#
+function loadPreset
+{
+    scriptDir=$(readlink -f $(dirname "$0"))
+    presetDir="$HOME/.gtpresets"
+    presetPath="$presetDir/$1"
+
+    if [ ! -f "$presetPath" ]; then
+        exitWith 1 "Error: presetPath '$1' not found in '$presetDir'"
+    fi
+
+    . "$presetPath"
+    exitOnError 1 "'$presetPath' produced an error"
+
+    apiDir="$scriptDir/apis"
+    apiPath="$scriptDir/apis/$api"
+    if [ ! -f "$apiPath" ]; then
+        exitWith 1 "Error: api '$api' not found in '$apiDir'"
+    fi
+
+    . "$apiPath"
+    exitOnError 1 "'$apiPath' produced an error"
+}
