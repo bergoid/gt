@@ -35,20 +35,20 @@ gtcommit
 
   'gtcommit' performs the following actions:
 
-  1   If the CWD is not under version control with git,
-      this script will abort.
+  1   If the CWD is not under version control
+      with git, this script will abort.
 
   2.  Look for an executable file named 'precommit' in the
       Current Working Directory (CWD) and run it, if found.
 
-  3.  Run the script 'clean-this' in your CWD.
-
-  4.  If the option -A is passed, all files in the git working tree
+  3.  If the option "-A" is passed, all files in the git working tree
       are updated to the index. Not recommended!
 
-  5.  The files are committed with commit message MSG. If no
+  4.  The files are committed with commit message "MSG". If no
       argument is given, the commit message must be typed into
       a text editor that will open automatically.
+
+  See also: 'gtnew', 'gtclone'
 
 gtnew
 -----
@@ -56,7 +56,7 @@ gtnew
 
   Usage: gtnew PRESET [REMOTEREPONAME]
 
-  This command initializes the current working directory (CWD)
+  This command initializes the Current Working Directory (CWD)
   for version control with git and creates a remote repository.
 
   'gtnew' performs the following actions:
@@ -90,7 +90,7 @@ gtnew
 
   7.  The first commit is pushed to the origin repository.
 
-  See also: gtclone, gtcommit
+  See also: 'gtclone', 'gtcommit'
 
 gttag
 -----
@@ -101,7 +101,7 @@ gttag
   'gttag' performs the following actions:
 
   1.  The script aborts if:
-          1.1. the current working directory (CWD) is not under version control with git
+          1.1. the Current Working Directory (CWD) is not under version control with git
           1.2. the git working tree has no remote upstream branch
           1.3. there are uncommited changes in the git working tree
           1.4. some commits are not yet pushed to the remote origin
