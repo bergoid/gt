@@ -1,4 +1,7 @@
-# Example preset file for a github user
+# Example preset file for a Github user
+# To create a preset file for your own Github account
+# copy this file to the directory ~/.gtpresets, rename
+# it and change the variable 'username' accordingly.
 
 api=github
 apiurl=https://api.github.com

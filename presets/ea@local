@@ -1,3 +1,9 @@
+# Example preset file for a user of a 'remote' repository
+# that is a directory on the local host machine.
+# To create a preset file for your own username
+# copy this file to the directory ~/.gtpresets, rename
+# it and change the variable 'username' accordingly.
+
 api=local
 url=$HOME/remote
 username=exampleuser

@@ -17,8 +17,6 @@ function createRemoteRepo
     # outer double-quotes? => inner un-escaped single-quotes?
     # --> inner s-qs don't escape variable substitution
 
-#    repoName="$1"
-
     if [ -z "$1" ]; then
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
