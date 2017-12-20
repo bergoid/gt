@@ -1,39 +1,36 @@
 #!/bin/bash
 
-#. rabot-common
-#if [ "$?" -ne "0" ]; then
-#  echo "$0: Error while sourcing rabot-common" >&2
-#  exit 1
-#fi
-
 . gt-utils
 if [ "$?" -ne "0" ]; then
   echo "$0: Error while sourcing gt-utils" >&2
   exit 1
 fi
 
-checkForHelp $1
-
-: << DOCSTRING
+function showHelp
+{
+cat <<DOCSTRING
 Usage: $(basename "$0") [-A] [MSG]
 
 '$(basename "$0")' performs the following actions:
 
-1   If the CWD is not under version control with git,
-    this script will abort.
+1   If the CWD is not under version control
+    with git, this script will abort.
 
 2.  Look for an executable file named 'precommit' in the
     Current Working Directory (CWD) and run it, if found.
 
-3.  Run the script 'clean-this' in your CWD.
-
-4.  If the option "-A" is passed, all files in the git working tree
+3.  If the option "-A" is passed, all files in the git working tree
     are updated to the index. Not recommended!
 
-5.  The files are committed with commit message "MSG". If no
+4.  The files are committed with commit message "MSG". If no
     argument is given, the commit message must be typed into
     a text editor that will open automatically.
+
+See also: 'gtnew', 'gtclone'
 DOCSTRING
+}
+
+checkForHelp $1
 
 # 1.
 if ! isInGit; then
@@ -49,12 +46,12 @@ if [ -f "./precommit" ]; then
 fi
 
 
+#3.  Run the script 'clean-this' in your CWD.
+#clean-this
+#exitOnError 1 "The script 'clean-this' returned an error."
+
+
 # 3.
-clean-this
-exitOnError 1 "The script 'clean-this' returned an error."
-
-
-# 4.
 addAll=false
 commitMsg=
 
@@ -80,7 +77,7 @@ if "$addAll"; then
 fi
 
 
-# 5.
+# 4.
 if [ -n "$commitMsg" ]; then
     git commit -m "$commitMsg"
 else

@@ -1,21 +1,14 @@
 #!/bin/bash
 
-#. rabot-common
-#if [ "$?" -ne "0" ]; then
-#  echo "$0: Error while sourcing rabot-common" >&2
-#  exit 1
-#fi
-
 . gt-utils
 if [ "$?" -ne "0" ]; then
   echo "$0: Error while sourcing gt-utils" >&2
   exit 1
 fi
 
-checkForHelp $1
-minNumArgs 1 $#
-
-: << DOCSTRING
+function showHelp
+{
+cat <<DOCSTRING
 Usage: $(basename "$0") PRESET [REPONAME]
 
 This command clones a git repository in the Current Working Directory (CWD).
@@ -41,6 +34,10 @@ This command clones a git repository in the Current Working Directory (CWD).
 
 See also: the function 'loadPreset' in 'gt-utils'
 DOCSTRING
+}
+
+checkForHelp $1
+minNumArgs 1 $#
 
 
 # 1.
