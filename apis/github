@@ -12,16 +12,20 @@ require curl
 #
 function createRemoteRepo
 {
-    # TODO : outer single-quotes => inner un-escaped double-quotes?
-    # --> s-qs escape variable substitution too
-    # outer double-quotes? => inner un-escaped single-quotes?
-    # --> inner s-qs don't escape variable substitution
-
     if [ -z "$1" ]; then
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
 
-    curl -u "$username" "$apiurl/user/repos" -d "{\"name\": \"$1\", \"description\": \"Description goes here\", \"private\": false, \"has_issues\": true, \"has_downloads\": true, \"has_wiki\": false}"
+    curl -u "$username" -X POST "$apiurl/user/repos" -d @- <<EOF
+    {
+        "name": "$1",
+        "description": "Description goes here",
+        "private": false,
+        "has_issues": true,
+        "has_downloads": true,
+        "has_wiki": false
+    }
+EOF
 }
 
 ####################################

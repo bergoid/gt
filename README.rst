@@ -98,6 +98,8 @@ gttag
 
   Usage: gttag TAGNAME
 
+  This command tags the commit referenced by HEAD and pushes the tag to the remote origin.
+
   'gttag' performs the following actions:
 
   1.  The script aborts if:
