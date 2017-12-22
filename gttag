@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 . gt-utils
 if [ "$?" -ne "0" ]; then
   echo "$0: Error while sourcing gt-utils" >&2
@@ -11,6 +10,8 @@ function showHelp
 {
 cat <<DOCSTRING
 Usage: $(basename "$0") TAGNAME
+
+This command tags the commit referenced by HEAD and pushes the tag to the remote origin.
 
 '$(basename "$0")' performs the following actions:
 
@@ -42,7 +43,7 @@ checkForHelp $1
 
     # 1.3
     if hasUncommittedChanges; then
-        exitOnError 1 "The git working tree has uncommitted changes."
+        exitWith 1 "Error: The git working tree has uncommitted changes."
     fi
 
     # 1.4
