@@ -40,5 +40,13 @@ function remoteRepoUrl
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
 
-    echo "$repourl/$username/$1.git"
+    if [ "$protocol" == "ssh" ]; then
+        if [ -n "$ssh_alias" ]; then
+            echo "$ssh_alias:$username/$1.git"
+        else
+            echo "git@$repourl_ssh:$username/$1.git"
+        fi
+    else
+        echo "$repourl_https/$username/$1.git"
+    fi
 }

@@ -5,5 +5,12 @@
 
 api=github
 apiurl=https://api.github.com
-repourl=https://github.com
+repourl_https=https://github.com
+repourl_ssh=github.com
+protocol=ssh
 username=exampleuser
+
+# Enable this setting when you are using multiple accounts on
+# Github and your ~/.ssh/config file is properly adjusted:
+#
+# ssh_alias=ea_github
