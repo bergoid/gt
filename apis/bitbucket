@@ -12,7 +12,18 @@ require curl
 #
 function createRemoteRepo
 {
-    echo TODO bb
+    if [ -z "$1" ]; then
+        exitWith 1 "Error: remoteRepoUrl : missing operand"
+    fi
+
+    curl -u "$username" -X POST  -H "Content-Type: application/json" "$apiurl/2.0/repositories/$username/$1" -d @- <<EOF
+    {
+        "name": "$1",
+        "description": "Description goes here",
+        "private": false,
+        "has_issues": true
+    }
+EOF
 }
 
 ####################################
@@ -27,5 +38,13 @@ function remoteRepoUrl
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
 
-    echo "$url/$username/$1.git"
+    if [ "$protocol" == "ssh" ]; then
+        if [ -n "$ssh_alias" ]; then
+            echo "$ssh_alias:$username/$1.git"
+        else
+            echo "git@$repourl:$username/$1.git"
+        fi
+    else
+        echo "https://$username@$repourl/$username/$1.git"
+    fi
 }
