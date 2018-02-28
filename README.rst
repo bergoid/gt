@@ -84,9 +84,9 @@ gtnew
       property in .git/config is set to the repo created on the
       remote location.
 
-  6.  The script 'gtcommit' is called to clean up the CWD, add
-      the entire git working tree to the staging area and commit
-      it with the message 'First commit'.
+  6.  The script 'gtcommit' is called to add the entire git working
+      tree to the staging area (option '-A') and commit it with the
+      message 'First commit'.
 
   7.  The first commit is pushed to the origin repository.
 

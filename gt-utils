@@ -2,9 +2,9 @@
 
 [ -n "$GTN_UTILS" ] && return || readonly GTN_UTILS=1
 
-. rabot-common
+. rabot-utils
 if [ "$?" -ne "0" ]; then
-  echo "$0: Error while sourcing rabot-common" >&2
+  echo "$0: Error while sourcing rabot-utils" >&2
   exit 1
 fi
 

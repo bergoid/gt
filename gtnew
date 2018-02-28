@@ -39,9 +39,9 @@ for version control with git and creates a remote repository.
     property in .git/config is set to the repo created on the
     remote location.
 
-6.  The script 'gtcommit' is called to clean up the CWD, add
-    the entire git working tree to the staging area and commit
-    it with the message 'First commit'.
+6.  The script 'gtcommit' is called to add the entire git working
+    tree to the staging area (option '-A') and commit it with the
+    message 'First commit'.
 
 7.  The first commit is pushed to the origin repository.
 
@@ -92,10 +92,6 @@ exitOnError 1 "'git remote add $(remoteRepoUrl "$remoteRepoName")' returned an e
 
 
 # 6.
-if [ -x "./precommit" ]; then
-    . ./precommit
-    exitOnError 1 "The script './precommit' returned an error."
-fi
 gtcommit -A "First commit"
 exitOnError 1 "'gtcommit' failed."
 

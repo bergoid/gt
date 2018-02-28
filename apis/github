@@ -16,15 +16,23 @@ function createRemoteRepo
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
 
-    curl -u "$username" -X POST "$apiurl/user/repos" -d @- <<EOF
-    {
-        "name": "$1",
-        "description": "Description goes here",
-        "private": false,
-        "has_issues": true,
-        "has_downloads": true,
-        "has_wiki": false
-    }
+    if [ -z "$token" ]; then
+        tokenOption=
+        loginOption="-u $username"
+    else
+        tokenOption="?access_token=$token"
+        loginOption=
+    fi
+
+        curl $loginOption -X POST -H "Content-Type:application/json" "$apiurl/user/repos$tokenOption" -d @- <<EOF
+        {
+            "name": "$1",
+            "description": "Description goes here",
+            "private": false,
+            "has_issues": true,
+            "has_downloads": true,
+            "has_wiki": false
+        }
 EOF
 }
 
