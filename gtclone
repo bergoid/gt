@@ -61,4 +61,4 @@ loadPreset $1
 
 # 5.
 git clone "$(remoteRepoUrl "$repoName")" .
-exitOnError 1 "'git clone "$(remoteRepoUrl "$repoName")" .' returned an error."
+exitOnError "'git clone "$(remoteRepoUrl "$repoName")" .' returned an error."

@@ -216,7 +216,7 @@ function loadPreset
     fi
 
     . "$presetPath"
-    exitOnError 1 "'$presetPath' produced an error"
+    exitOnError "'$presetPath' produced an error"
 
     apiDir="$scriptDir/apis"
     apiPath="$scriptDir/apis/$api"
@@ -225,5 +225,5 @@ function loadPreset
     fi
 
     . "$apiPath"
-    exitOnError 1 "'$apiPath' produced an error"
+    exitOnError "'$apiPath' produced an error"
 }

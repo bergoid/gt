@@ -42,13 +42,13 @@ fi
 cd $(getToplevel)
 if [ -f "./precommit" ]; then
     . ./precommit
-    exitOnError 1 "The script './precommit' returned an error."
+    exitOnError "The script './precommit' returned an error."
 fi
 
 
 #3.  Run the script 'clean-this' in your CWD.
 #clean-this
-#exitOnError 1 "The script 'clean-this' returned an error."
+#exitOnError "The script 'clean-this' returned an error."
 
 
 # 3.
@@ -73,7 +73,7 @@ handleOptionalArgument "$2"
 
 if "$addAll"; then
     git add -A
-    exitOnError 1 "'git add -A' returned an error."
+    exitOnError "'git add -A' returned an error."
 fi
 
 
@@ -83,4 +83,4 @@ if [ -n "$commitMsg" ]; then
 else
     git commit
 fi
-exitOnError 1 "'git commit' returned an error."
+exitOnError "'git commit' returned an error."
