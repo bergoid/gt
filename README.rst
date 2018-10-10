@@ -8,10 +8,10 @@ gtclone
 
   'gtclone' performs the following actions:
 
-  1.  If the CWD is not empty, this script will abort.
-
-  2.  If the CWD is already under git version control, this script
+  1.  If the CWD is already under git version control, this script
       will abort.
+
+  2.  If the CWD is not empty, this script will abort.
 
   3.  If the optional argument REPONAME is specified,
       this is used as the repository name. Otherwise
