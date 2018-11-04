@@ -97,7 +97,7 @@ function hasUncommittedChanges
         false
     else
         git $(getPathArgString "$1") diff-index --quiet HEAD --
-        exitStatus="$?"
+        local exitStatus="$?"
         [ "$exitStatus" -ne "0" ]
     fi
 }
@@ -160,7 +160,7 @@ function hasUpstream
         false
     else
         git $(getPathArgString "$1") show-branch remotes/origin/$(getCurrentBranch "$1") 1>/dev/null 2>&1
-        exitStatus="$?"
+        local exitStatus="$?"
         [ "$exitStatus" -eq "0" ]
     fi
 }
@@ -207,9 +207,9 @@ function hasUpstream
 #
 function loadPreset
 {
-    scriptDir=$(readlink -f $(dirname "$0"))
-    presetDir="$HOME/.gtpresets"
-    presetPath="$presetDir/$1"
+    local scriptDir=$(readlink -f $(dirname "$0"))
+    local presetDir="$HOME/.gtpresets"
+    local presetPath="$presetDir/$1"
 
     if [ ! -f "$presetPath" ]; then
         exitWith 1 "Error: presetPath '$1' not found in '$presetDir'"
@@ -218,8 +218,8 @@ function loadPreset
     . "$presetPath"
     exitOnError "'$presetPath' produced an error"
 
-    apiDir="$scriptDir/apis"
-    apiPath="$scriptDir/apis/$api"
+    local apiDir="$scriptDir/apis"
+    local apiPath="$scriptDir/apis/$api"
     if [ ! -f "$apiPath" ]; then
         exitWith 1 "Error: api '$api' not found in '$apiDir'"
     fi

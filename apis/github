@@ -17,11 +17,11 @@ function createRemoteRepo
     fi
 
     if [ -z "$token" ]; then
-        tokenOption=
-        loginOption="-u $username"
+        local tokenOption=
+        local loginOption="-u $username"
     else
-        tokenOption="?access_token=$token"
-        loginOption=
+        local tokenOption="?access_token=$token"
+        local loginOption=
     fi
 
         curl $loginOption -X POST -H "Content-Type:application/json" "$apiurl/user/repos$tokenOption" -d @- <<EOF
