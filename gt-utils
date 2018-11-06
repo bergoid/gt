@@ -215,8 +215,7 @@ function loadPreset
         exitWith 1 "Error: presetPath '$1' not found in '$presetDir'"
     fi
 
-    . "$presetPath"
-    exitOnError "'$presetPath' produced an error"
+    try . "$presetPath"
 
     local apiDir="$scriptDir/apis"
     local apiPath="$scriptDir/apis/$api"
@@ -224,6 +223,5 @@ function loadPreset
         exitWith 1 "Error: api '$api' not found in '$apiDir'"
     fi
 
-    . "$apiPath"
-    exitOnError "'$apiPath' produced an error"
+    try . "$apiPath"
 }

@@ -60,5 +60,4 @@ repoName=${2:-$(basename $(pwd))}
 loadPreset $1
 
 # 5.
-git clone "$(remoteRepoUrl "$repoName")" .
-exitOnError "'git clone "$(remoteRepoUrl "$repoName")" .' returned an error."
+try git clone "$(remoteRepoUrl "$repoName")" .

@@ -54,12 +54,10 @@ checkForHelp $1
 
 # 2.
 tagname="$1"
-git tag -a $tagname -m "$tagname"
-exitOnError "'git tag -a $tagname -m "$tagname"' returned an error."
+try git tag -a $tagname -m "$tagname"
 
 
 # 3.
 if hasUpstream; then
-    git push origin --tags
-    exitOnError "'git push origin --tags' returned an error."
+    try git push origin --tags
 fi

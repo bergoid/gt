@@ -41,8 +41,7 @@ fi
 # 2.
 cd $(getToplevel)
 if [ -f "./precommit" ]; then
-    . ./precommit
-    exitOnError "The script './precommit' returned an error."
+    try . ./precommit
 fi
 
 
@@ -72,15 +71,13 @@ handleOptionalArgument "$1"
 handleOptionalArgument "$2"
 
 if "$addAll"; then
-    git add -A
-    exitOnError "'git add -A' returned an error."
+    try git add -A
 fi
 
 
 # 4.
 if [ -n "$commitMsg" ]; then
-    git commit -m "$commitMsg"
+    try git commit -m "$commitMsg"
 else
-    git commit
+    try git commit
 fi
-exitOnError "'git commit' returned an error."

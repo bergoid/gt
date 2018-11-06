@@ -21,16 +21,10 @@ function createRemoteRepo
         false
     fi
 
-    mkdir -p "$url/$1"
-    exitOnError "'mkdir -p $url/$1' produced an error"
-
-    pushd "$url/$1" > /dev/null
-    exitOnError "'pushd $url/$1' produced an error"
-
-    git init --bare
-    exitOnError "'git init --bare' produced an error"
-
-    popd > /dev/null
+    try mkdir -p "$url/$1"
+    try pushd "$url/$1" > /dev/null
+    try git init --bare
+    try popd > /dev/null
 }
 
 ####################################

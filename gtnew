@@ -68,8 +68,7 @@ if [ "$(find -type f | wc -l)" == "0" ]; then
         phName="${phName}_$(randid 5)"
     fi
 
-    touch "$phName"
-    exitOnError "'touch $phName' failed"
+    try touch "$phName"
 
 fi
 
@@ -80,22 +79,17 @@ remoteRepoName=${2:-$(basename $(pwd))}
 
 # 4.
 loadPreset $1
-createRemoteRepo $remoteRepoName
-exitOnError "'createRemoteRepo $remoteRepoName' returned an error."
+try createRemoteRepo $remoteRepoName
 
 
 # 5.
-git init
-exitOnError "'git init' returned an error."
-git remote add origin "$(remoteRepoUrl "$remoteRepoName")"
-exitOnError "'git remote add $(remoteRepoUrl "$remoteRepoName")' returned an error."
+try git init
+try git remote add origin "$(remoteRepoUrl "$remoteRepoName")"
 
 
 # 6.
-gtcommit -A "First commit"
-exitOnError "'gtcommit' failed."
+try gtcommit -A "First commit"
 
 
 # 7.
-git push --set-upstream origin master
-exitOnError "'git push --set-upstream origin master' failed."
+try git push --set-upstream origin master
