@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ -n "$GTN_UTILS" ] && return || readonly GTN_UTILS=1
+[ -n "$GT_UTILS" ] && return || readonly GT_UTILS=1
 
 . rabot-utils
 if [ "$?" -ne "0" ]; then
