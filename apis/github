@@ -16,23 +16,18 @@ function createRemoteRepo
         exitWith 1 "Error: remoteRepoUrl : missing operand"
     fi
 
-    if [ -z "$token" ]; then
-        local tokenOption=
-        local loginOption="-u $username"
-    else
-        local tokenOption="?access_token=$token"
-        local loginOption=
-    fi
+    test -n "$token"
 
-        curl $loginOption -X POST -H "Content-Type:application/json" "$apiurl/user/repos$tokenOption" -d @- <<EOF
-        {
-            "name": "$1",
-            "description": "Description goes here",
-            "private": false,
-            "has_issues": true,
-            "has_downloads": true,
-            "has_wiki": false
-        }
+    curl \
+      -X POST \
+      -H "Authorization: token $token" \
+      -H "Accept: application/vnd.github.v3+json" \
+      https://api.github.com/user/repos \
+      -d @- <<EOF
+      {
+          "name": "$1",
+          "has_wiki": false
+      }
 EOF
 }
 
