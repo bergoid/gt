@@ -2,28 +2,36 @@ gtclone
 -------
 ::
 
-  Usage: gtclone PRESET [REPONAME]
+  Usage: gtclone PRESET REPONAME [DIRNAME]
 
-  This command clones a git repository in the Current Working Directory (CWD).
+  This command clones a git repository.
 
   'gtclone' performs the following actions:
 
-  1.  If the CWD is already under git version control, this script
-      will abort.
+  1.  DIRNAME is the destination directory. If not specified, then
+      ./REPONAME is taken as DIRNAME.
 
-  2.  If the CWD is not empty, this script will abort.
+  2.  If DIRNAME exists:
 
-  3.  If the optional argument REPONAME is specified,
-      this is used as the repository name. Otherwise
-      the name of the CWD is used.
+      2.1  If DIRNAME is already under git version control,
+           this script will abort.
 
-  4.  The full location of the repository is determined based
+      2.2  Otherwise, a warning is given that DIRNAME already exists,
+           asking for the user's confirmation to continue.
+
+  3.  The full location of the remote repository is determined based
       on PRESET and the repository name.
       For instructions on how to create and use presets, see the
       comments preceding the function called 'loadPreset' in the
       file 'gt-utils'.
 
-  5.  The repository is cloned in the CWD.
+  4.  The repository is cloned in DIRNAME.
+
+  5.  The DIRNAME-local properties:
+          git config user.name
+          git config user.email
+      are set to their respective values as (and if) found in the preset
+      file.
 
   See also: the function 'loadPreset' in 'gt-utils'
 

@@ -88,8 +88,8 @@ try git remote add origin "$(remoteRepoUrl "$remoteRepoName")"
 
 
 # 6.
-try git config user.email "$useremail"
-try git config user.name "$username"
+test -n "$username" && try git config user.name "$username"
+test -n "$useremail" && try git config user.email "$useremail"
 try gtcommit -A "First commit"
 
 
