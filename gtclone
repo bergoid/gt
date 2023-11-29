@@ -89,3 +89,6 @@ try cd "$dirName"
 # 5.
 test -n "$username" && try git config user.name "$username"
 test -n "$useremail" && try git config user.email "$useremail"
+
+# Clear status code
+exit 0
