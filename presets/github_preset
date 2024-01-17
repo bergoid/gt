@@ -1,0 +1,12 @@
+# Example preset file for a Github user
+# To create a preset file for your own Github account
+# copy this file to the directory ~/.gtpresets, rename
+# it and change the variables 'username', 'ssh_alias' and 'token'.
+
+api=github
+apiurl=https://api.github.com
+repourl=github.com
+protocol=ssh
+username=USER
+ssh_alias=ALIAS
+token=TOKEN

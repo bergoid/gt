@@ -46,11 +46,13 @@ gtcommit
   1   If the CWD is not under version control
       with git, this script will abort.
 
-  2.  Look for an executable file named 'precommit' in the
-      Current Working Directory (CWD) and run it, if found.
+  2.  Look for a file named 'precommit' in the
+      Current Working Directory (CWD) and run ('source') it,
+      if found.
 
-  3.  If the option "-A" is passed, all files in the git working tree
-      are updated to the index. Not recommended!
+  3.  If the option "-A" is passed, all files in the git
+      working tree are added to the index before comitting.
+      Not recommended!
 
   4.  The files are committed with commit message "MSG". If no
       argument is given, the commit message must be typed into

@@ -1,0 +1,28 @@
+# Example ssh config file
+#
+# 1. Generate public/private key pair
+#    (choose a meaningful name for ALIAS):
+#
+#     ssh-keygen -f ~/.ssh/ALIAS
+#
+# 2. On the Github website, in your USER account settings,
+#    create an SSH key and paste the contents of ~/.ssh/ALIAS.pub
+#    in the text field.
+#
+# 3. Copy this file to ~/.ssh/ and name it 'config'. Replace
+#    'USER' and 'ALIAS' with their actual values.
+#
+# 4. Create a preset file by copying github_preset to ~/.gtpresets/
+#    and replacing 'USER' and 'ALIAS' with their actual names.
+#
+# 5. For repositories that were already cloned, change their remote
+#    URL:
+#
+#    git remote set-url origin ALIAS:USER/REPONAME.git
+
+
+# USER at github
+Host ALIAS
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/ALIAS
