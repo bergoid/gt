@@ -102,6 +102,53 @@ gtnew
 
   See also: 'gtclone', 'gtcommit'
 
+gtsetssh
+--------
+::
+
+  Usage: gtsetssh HOST USER
+
+  HOST is one of the following values:
+
+      HOST        URL
+      github      github.com
+
+  USER is a username at HOST.
+
+  'gtsetssh' performs the following actions:
+
+  1. Find the template file for the given HOST in the 'presets' subdirectory of
+     'gt'. The script aborts if this file is not found.
+
+  2. Generate a new pair of ed25519 public/private keys and save them in
+     ~/.ssh as HOST_USER.pub and HOST_USER respectively.
+
+  3. Add the alias HOST_USER to ~/.ssh/config.
+
+  4. Create a file named HOST_USER in ~/.gtpresets with the necessary
+     environment variables, obtained from the template file and from the
+     command-line arguments.
+
+  After running this script, the user needs to perform the following manual steps:
+
+  1. If the USER account at HOST does not yet exist, create it.
+
+  2. Add an SSH key to the account of USER at HOST, and paste the contents of
+     ~/.ssh/HOST_USER.pub into it.
+
+  3. Add a token to the account of USER at HOST, copy its value and paste it at
+     the end of the last line ('token=') in ~/.gtpresets/HOST_USER.
+
+  4. You can rename the file HOST_USER in ~/.gtpresets to something shorter.
+
+  All files and directories mentioned here that do not yet exist, will be created
+  by the script.
+
+  The script will abort if at least one of the following files already exists:
+      ~/.gtpresets/HOST_USER
+      ~.ssh/HOST_USER.pub
+      ~.ssh/HOST_USER
+
 gttag
 -----
 ::
