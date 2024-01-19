@@ -9,14 +9,16 @@ fi
 function showHelp
 {
 cat <<DOCSTRING
-Usage: $(basename "$0") HOST USER
+Usage: $(basename "$0") HOST USER [PRESET]
+
+This command sets up a preset config
 
 HOST is one of the following values:
 
     HOST        URL
     github      github.com
 
-USER is a username at HOST.
+USER is a username at HOST. PRESET is an optional shorthand name for the preset.
 
 '$(basename "$0")' performs the following actions:
 
@@ -24,13 +26,14 @@ USER is a username at HOST.
    'gt'. The script aborts if this file is not found.
 
 2. Generate a new pair of ed25519 public/private keys and save them in
-   ~/.ssh as HOST_USER.pub and HOST_USER respectively.
+   ~/.ssh as HOST_USER.pub and HOST_USER respectively. You will be asked to
+   enter an optional passphrase.
 
 3. Add the alias HOST_USER to ~/.ssh/config.
 
-4. Create a file named HOST_USER in ~/.gtpresets with the necessary
-   environment variables, obtained from the template file and from the
-   command-line arguments.
+4. Create a file named PRESET (or HOST_USER by default) in ~/.gtpresets with
+   the necessary environment variables, obtained from the template file and
+   from the command-line arguments.
 
 After running this script, the user needs to perform the following manual steps:
 
@@ -61,15 +64,30 @@ require ssh-keygen
 
 host="$1"
 user="$2"
+preset_shorthand="$3"
+
+alias="${host}_${user}"
+preset_name="${preset_shorthand:-$alias}"
+preset_file="$HOME/.gtpresets/${preset_name}"
+ssh_config_file="$HOME/.ssh/config"
+pub_key_file="$HOME/.ssh/$alias.pub"
+priv_key_file="$HOME/.ssh/$alias"
+
+# echo preset_file == $preset_file
+# echo ssh_config_file == $ssh_config_file
+# echo pub_key_file == $pub_key_file
+# echo priv_key_file == $priv_key_file
+#
+# exit 0
 
 # 0. Abort if one of the output files already exists
-test -f "~/.gtpresets/$host_$user"
+test ! -f "$HOME/.gtpresets/$alias"
 exitOnError "Error: the file $_ already exists"
 
-test -f "~/.ssh/$host_$user.pub"
+test ! -f "$HOME/.ssh/$alias.pub"
 exitOnError "Error: the file $_ already exists"
 
-test -f "~/.ssh/$host_$user"
+test ! -f "$HOME/.ssh/$alias"
 exitOnError "Error: the file $_ already exists"
 
 
@@ -104,11 +122,54 @@ try test -n "$repourl"
 
 
 # 2. Generate key pair
-try ssh-keygen -f "~/.ssh/$host_$user"
+try mkdir -p "$HOME/.ssh/"
+try ssh-keygen -f "$HOME/.ssh/$alias"
 
 
 # 3. Add alias to SSH config
+try cat << EOF >> "$ssh_config_file"
+
+# $user at $host
+Host $alias
+    HostName ${repourl}
+    User git
+    IdentityFile ${priv_key_file}
+EOF
 
 
 # 4. Create preset file
+try cat << EOF >> "$preset_file"
+api=$host
+apiurl=$apiurl
+repourl=$repourl
+protocol=ssh
+username=$user
+ssh_alias=$alias
+token=
+EOF
 
+
+# .5 Print next steps to do manually
+try cat << EOF
+
+Preset $preset_file successfully created!
+
+But there are still some extra steps you have to do manually:
+
+1. If the account '$user' at '$repourl' does not yet exist, create it.
+
+2. Add an SSH key to the account of '$user' at '$repourl', and paste
+   the contents of ~/.ssh/$alias.pub into it.
+
+3. Add a token to the account of '$user' at '$repourl', copy its value
+   and paste it at the end of the last line ('token=') in
+   ~/.gtpresets/$preset_name.
+EOF
+
+test -z "$preset_shorthand" && try cat << EOF
+
+4. Optionally, you can rename the file '$alias' in ~/.gtpresets/ to something
+   shorter.
+EOF
+
+exit 0

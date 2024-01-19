@@ -102,32 +102,35 @@ gtnew
 
   See also: 'gtclone', 'gtcommit'
 
-gtsetssh
+gtpreset
 --------
 ::
 
-  Usage: gtsetssh HOST USER
+  Usage: gtpreset HOST USER [PRESET]
+
+  This command sets up a preset config
 
   HOST is one of the following values:
 
       HOST        URL
       github      github.com
 
-  USER is a username at HOST.
+  USER is a username at HOST. PRESET is an optional shorthand name for the preset.
 
-  'gtsetssh' performs the following actions:
+  'gtpreset' performs the following actions:
 
   1. Find the template file for the given HOST in the 'presets' subdirectory of
      'gt'. The script aborts if this file is not found.
 
   2. Generate a new pair of ed25519 public/private keys and save them in
-     ~/.ssh as HOST_USER.pub and HOST_USER respectively.
+     ~/.ssh as HOST_USER.pub and HOST_USER respectively. You will be asked to
+     enter an optional passphrase.
 
   3. Add the alias HOST_USER to ~/.ssh/config.
 
-  4. Create a file named HOST_USER in ~/.gtpresets with the necessary
-     environment variables, obtained from the template file and from the
-     command-line arguments.
+  4. Create a file named PRESET (or HOST_USER by default) in ~/.gtpresets with
+     the necessary environment variables, obtained from the template file and
+     from the command-line arguments.
 
   After running this script, the user needs to perform the following manual steps:
 
