@@ -146,6 +146,7 @@ protocol=ssh
 username=$user
 ssh_alias=$alias
 token=
+useremail=
 EOF
 
 
@@ -162,7 +163,10 @@ But there are still some extra steps you have to do manually:
    the contents of ~/.ssh/$alias.pub into it.
 
 3. Add a token to the account of '$user' at '$repourl', copy its value
-   and paste it at the end of the last line ('token=') in
+   and paste it after 'token=' in ~/.gtpresets/$preset_name.
+
+4. Look up the 'noreply' email address in the account settings of '$user'
+   at '$repourl', copy its value and paste it after 'useremail=' in
    ~/.gtpresets/$preset_name.
 EOF
 
