@@ -37,8 +37,7 @@ This command clones a git repository.
 5.  The DIRNAME-local properties:
         git config user.name
         git config user.email
-    are set to their respective values as (and if) found in the preset
-    file.
+    are set to their respective values as found in the preset file.
 
 See also: the function 'loadPreset' in 'gt-utils'
 DOCSTRING
@@ -87,8 +86,10 @@ try cd "$dirName"
 
 
 # 5.
-test -n "$username" && try git config user.name "$username"
-test -n "$useremail" && try git config user.email "$useremail"
+test -n "$username"
+exitOnError "Error: username not set. Add it to ~/.gtpresets/$1"
+try git config user.name "$username"
 
-# Clear status code
-exit 0
+test -n "$useremail"
+exitOnError "Error: useremail not set. Add it to ~/.gtpresets/$1"
+try git config user.email "$useremail"

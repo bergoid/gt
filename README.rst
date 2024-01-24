@@ -30,8 +30,7 @@ gtclone
   5.  The DIRNAME-local properties:
           git config user.name
           git config user.email
-      are set to their respective values as (and if) found in the preset
-      file.
+      are set to their respective values as found in the preset file.
 
   See also: the function 'loadPreset' in 'gt-utils'
 
@@ -116,6 +115,7 @@ gtpreset
       github      github.com
 
   USER is a username at HOST. PRESET is an optional shorthand name for the preset.
+  If omitted, PRESET's value will be set to HOST_USER.
 
   'gtpreset' performs the following actions:
 
@@ -128,7 +128,7 @@ gtpreset
 
   3. Add the alias HOST_USER to ~/.ssh/config.
 
-  4. Create a file named PRESET (or HOST_USER by default) in ~/.gtpresets with
+  4. Create a file named PRESET in ~/.gtpresets with
      the necessary environment variables, obtained from the template file and
      from the command-line arguments.
 
@@ -140,15 +140,19 @@ gtpreset
      ~/.ssh/HOST_USER.pub into it.
 
   3. Add a token to the account of USER at HOST, copy its value and paste it at
-     the end of the last line ('token=') in ~/.gtpresets/HOST_USER.
+     the end of the last line ('token=') in ~/.gtpresets/PRESET.
 
-  4. You can rename the file HOST_USER in ~/.gtpresets to something shorter.
+  4. Look up the 'noreply' email address in the account settings of USER
+     at HOST, copy its value and paste it after 'useremail=' in
+     ~/.gtpresets/PRESET.
+
+  5. You can always rename the file PRESET in ~/.gtpresets.
 
   All files and directories mentioned here that do not yet exist, will be created
   by the script.
 
   The script will abort if at least one of the following files already exists:
-      ~/.gtpresets/HOST_USER
+      ~/.gtpresets/PRESET
       ~.ssh/HOST_USER.pub
       ~.ssh/HOST_USER
 
