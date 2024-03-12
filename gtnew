@@ -2,13 +2,12 @@
 
 . gt-utils
 if [ "$?" -ne "0" ]; then
-  echo "$0: Error while sourcing gt-utils" >&2
-  exit 1
+	echo "$0: Error while sourcing gt-utils" >&2
+	exit 1
 fi
 
-function showHelp
-{
-cat <<DOCSTRING
+function showHelp {
+	cat <<DOCSTRING
 Usage: $(basename "$0") PRESET [REMOTEREPONAME]
 
 This command initializes the Current Working Directory (CWD)
@@ -52,40 +51,34 @@ DOCSTRING
 checkForHelp $1
 minNumArgs 1 $#
 
-
 # 1.
 if isInGit; then
-    exitWith 1 "Error: the current working directory ( '$PWD' ) is already under git version control."
+	exitWith 1 "Error: the current working directory ( '$PWD' ) is already under git version control."
 fi
-
 
 # 2.
 if [ "$(find -type f | wc -l)" == "0" ]; then
 
-    phName=placeholder
+	phName=placeholder
 
-    if [ -e "$phName" ]; then
-        phName="${phName}_$(randid 5)"
-    fi
+	if [ -e "$phName" ]; then
+		phName="${phName}_$(randid 5)"
+	fi
 
-    try touch "$phName"
+	try touch "$phName"
 
 fi
 
-
 # 3.
 remoteRepoName=${2:-$(basename $(pwd))}
-
 
 # 4.
 loadPreset $1
 try createRemoteRepo $remoteRepoName
 
-
 # 5.
 try git init
 try git remote add origin "$(remoteRepoUrl "$remoteRepoName")"
-
 
 # 6.
 test -n "$username"
@@ -98,6 +91,5 @@ try git config user.email "$useremail"
 
 try gtcommit -A "First commit"
 
-
 # 7.
-try git push --set-upstream origin master
+try git push --set-upstream origin main
